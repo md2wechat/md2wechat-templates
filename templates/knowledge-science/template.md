@@ -24,7 +24,7 @@ subtitle: 读完这篇，你就真的懂了
 
 :::callout
 type: insight
-content: [用最通俗的一句话定义这个概念，普通人能看懂]
+content: "[用最通俗的一句话定义这个概念，普通人能看懂]"
 :::
 
 ---

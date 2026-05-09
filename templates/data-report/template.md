@@ -44,7 +44,7 @@ stats:
 
 :::callout
 type: insight
-content: [用一句话总结这个发现的意义]
+content: "[用一句话总结这个发现的意义]"
 :::
 
 [展开分析，2-3 段]

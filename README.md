@@ -4,7 +4,7 @@
 
 **微信公众号 Markdown 文章模板库**
 
-30+ 开箱即用模板 | 使用 [md2wechat](https://github.com/geekjourneyx/md2wechat-skill) 的 `:::block` 高级排版语法
+10 款开箱即用模板（持续增长）| 使用 [md2wechat](https://github.com/geekjourneyx/md2wechat-skill) 的 `:::block` 高级排版语法
 
 </div>
 

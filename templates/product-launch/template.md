@@ -45,7 +45,7 @@ items:
 
 :::callout
 type: tip
-content: [使用这个新功能的最佳实践或小技巧]
+content: "[使用这个新功能的最佳实践或小技巧]"
 :::
 
 ---
