@@ -157,6 +157,25 @@ test("rejects a quarterly comparison without canonical plan and actual columns",
   }, { name: "quarterly-review" });
 });
 
+test("scenario semantic checks ignore module examples inside Markdown fences", async () => {
+  assert.ok(validator);
+  const customerExample = validTemplate
+    .replace("name: sample", "name: customer-case-study") +
+    "\n```markdown\n:::cases[案例概览]\n[请填写客户或案例场景] | [请填写经客户确认的结果] | [请填写实施范围、方法与口径说明]\n:::\n```\n";
+  await withFixture(customerExample, async file => {
+    const result = await validator.validateTemplate(file);
+    assert.match(result.errors.join("\n"), /customer-case-study cases row must use title, result, body semantics/);
+  }, { name: "customer-case-study" });
+
+  const quarterlyExample = validTemplate
+    .replace("name: sample", "name: quarterly-review") +
+    "\n```markdown\n:::compare[计划 | 实际]\n[请填写目标] | [请填写计划] | [请填写结果] | [请填写偏差]\n:::\n```\n";
+  await withFixture(quarterlyExample, async file => {
+    const result = await validator.validateTemplate(file);
+    assert.match(result.errors.join("\n"), /quarterly-review compare opener must be :::compare\[计划 \| 实际\]/);
+  }, { name: "quarterly-review" });
+});
+
 test("README groups all templates by publishing scenario", async () => {
   const readme = await readFile(path.join(root, "README.md"), "utf8");
   const expectedGroups = ["企业沟通", "研究洞察", "产品增长", "个人创作"];

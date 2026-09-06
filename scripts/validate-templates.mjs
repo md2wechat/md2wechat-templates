@@ -85,6 +85,7 @@ function inspectMarkdown(body) {
   const modules = [];
   const cleanBody = body.replace(/<!--[\s\S]*?-->/g, "");
   const lines = cleanBody.split("\n");
+  const liveLines = [];
   let codeFence = null;
   let moduleName = null;
 
@@ -99,6 +100,7 @@ function inspectMarkdown(body) {
       continue;
     }
     if (codeFence) continue;
+    liveLines.push(line);
 
     if (/^\s*:::\s*$/.test(line)) {
       if (!moduleName) errors.push(`unexpected module closing fence at line ${index + 1}`);
@@ -117,7 +119,7 @@ function inspectMarkdown(body) {
 
   if (codeFence) errors.push("unclosed Markdown code fence");
   if (moduleName) errors.push(`unclosed module fence: ${moduleName}`);
-  return { cleanBody, modules, errors };
+  return { cleanBody, liveBody: liveLines.join("\n"), modules, errors };
 }
 
 function meaningfulPlaceholders(body) {
@@ -196,7 +198,7 @@ export async function validateTemplate(file) {
     ...parsed.errors,
     ...validateFrontmatter(parsed.frontmatter, directoryName),
     ...inspected.errors,
-    ...validateScenarioSemantics(directoryName, inspected.cleanBody),
+    ...validateScenarioSemantics(directoryName, inspected.liveBody),
   ];
   const distinctModules = new Set(inspected.modules);
   if (distinctModules.size < 3) errors.push("template must use at least 3 distinct live modules");
