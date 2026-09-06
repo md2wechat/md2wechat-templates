@@ -129,6 +129,34 @@ test("the eight enterprise templates have distinct contracts and calls to action
   assert.equal(callsToAction.size, enterpriseTemplates.length, "enterprise calls to action must be unique");
 });
 
+test("rejects a customer case row that does not follow title, result, body semantics", async () => {
+  assert.ok(validator);
+  const content = validTemplate
+    .replace("name: sample", "name: customer-case-study")
+    .replace(
+      /:::quote[\s\S]*?:::/,
+      ":::cases[案例概览]\n[请填写实施对象] | [请填写行业] | [请填写经客户确认的结果描述]\n:::"
+    );
+  await withFixture(content, async file => {
+    const result = await validator.validateTemplate(file);
+    assert.match(result.errors.join("\n"), /customer-case-study cases row must use title, result, body semantics/);
+  }, { name: "customer-case-study" });
+});
+
+test("rejects a quarterly comparison without canonical plan and actual columns", async () => {
+  assert.ok(validator);
+  const content = validTemplate
+    .replace("name: sample", "name: quarterly-review")
+    .replace(
+      /:::quote[\s\S]*?:::/,
+      ":::compare[计划与实际]\n[请填写目标] | [请填写计划] | [请填写结果] | [请填写偏差]\n:::"
+    );
+  await withFixture(content, async file => {
+    const result = await validator.validateTemplate(file);
+    assert.match(result.errors.join("\n"), /quarterly-review compare opener must be :::compare\[计划 \| 实际\]/);
+  }, { name: "quarterly-review" });
+});
+
 test("README groups all templates by publishing scenario", async () => {
   const readme = await readFile(path.join(root, "README.md"), "utf8");
   const expectedGroups = ["企业沟通", "研究洞察", "产品增长", "个人创作"];
