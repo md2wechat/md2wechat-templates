@@ -85,6 +85,7 @@ function inspectMarkdown(body) {
   const modules = [];
   const cleanBody = body.replace(/<!--[\s\S]*?-->/g, "");
   const lines = cleanBody.split("\n");
+  const liveLines = [];
   let codeFence = null;
   let moduleName = null;
 
@@ -99,6 +100,7 @@ function inspectMarkdown(body) {
       continue;
     }
     if (codeFence) continue;
+    liveLines.push(line);
 
     if (/^\s*:::\s*$/.test(line)) {
       if (!moduleName) errors.push(`unexpected module closing fence at line ${index + 1}`);
@@ -117,7 +119,7 @@ function inspectMarkdown(body) {
 
   if (codeFence) errors.push("unclosed Markdown code fence");
   if (moduleName) errors.push(`unclosed module fence: ${moduleName}`);
-  return { cleanBody, modules, errors };
+  return { cleanBody, liveBody: liveLines.join("\n"), modules, errors };
 }
 
 function meaningfulPlaceholders(body) {
@@ -143,6 +145,27 @@ function containsPossibleSecret(source) {
 function containsPossibleUnpublishedContent(source) {
   const scrubbed = source.replace(/\[[^\]\n]+\]/g, "[PLACEHOLDER]");
   return /内部机密|confidential|internal only|尚未发布.{0,20}(?:公告|稿|正文|材料)|未发布(?:的)?(?:客户|产品|文章|稿件|公告)/i.test(scrubbed);
+}
+
+function validateScenarioSemantics(directoryName, body) {
+  const errors = [];
+  if (directoryName === "customer-case-study") {
+    const block = body.match(/(?:^|\n):::cases(?:\[[^\]]*\])?\s*\n([\s\S]*?)\n:::/);
+    const row = block?.[1].split("\n").find(line => line.includes("|"));
+    const columns = row?.split("|").map(value => value.trim()) ?? [];
+    if (
+      columns.length !== 3 ||
+      !/(?:客户|案例)/.test(columns[0]) ||
+      !/结果/.test(columns[1]) ||
+      !/(?:范围|方法|口径)/.test(columns[2])
+    ) {
+      errors.push("customer-case-study cases row must use title, result, body semantics");
+    }
+  }
+  if (directoryName === "quarterly-review" && !/^:::compare\[计划 \| 实际\]\s*$/m.test(body)) {
+    errors.push("quarterly-review compare opener must be :::compare[计划 | 实际]");
+  }
+  return errors;
 }
 
 function validateFrontmatter(frontmatter, directoryName) {
@@ -175,6 +198,7 @@ export async function validateTemplate(file) {
     ...parsed.errors,
     ...validateFrontmatter(parsed.frontmatter, directoryName),
     ...inspected.errors,
+    ...validateScenarioSemantics(directoryName, inspected.liveBody),
   ];
   const distinctModules = new Set(inspected.modules);
   if (distinctModules.size < 3) errors.push("template must use at least 3 distinct live modules");
@@ -258,6 +282,6 @@ if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.me
     for (const error of errors) console.error(`ERROR: ${error}`);
     process.exitCode = 1;
   } else {
-    console.log("Validated 10 templates against the v3.4.0 contract.");
+    console.log("Validated 18 templates against the v3.4.0 contract.");
   }
 }

@@ -13,16 +13,35 @@ try {
 
 const root = path.resolve(import.meta.dirname, "..");
 const expectedTemplates = [
+  "company-announcement",
+  "customer-case-study",
   "data-report",
+  "employer-brand",
+  "event-recap",
+  "executive-opinion",
   "interview",
   "knowledge-science",
   "listicle",
+  "meeting-to-public-brief",
   "newsletter",
   "opinion-piece",
   "product-launch",
+  "quarterly-review",
   "tech-tutorial",
   "thread-summary",
+  "whitepaper-summary",
   "weekly-digest",
+];
+
+const enterpriseTemplates = [
+  "customer-case-study",
+  "company-announcement",
+  "executive-opinion",
+  "meeting-to-public-brief",
+  "event-recap",
+  "quarterly-review",
+  "whitepaper-summary",
+  "employer-brand",
 ];
 
 const validTemplate = `---
@@ -75,13 +94,93 @@ test("validator module is available", () => {
   assert.ok(validator, "scripts/validate-templates.mjs must exist");
 });
 
-test("all ten current templates have complete executable contracts", async () => {
+test("all eighteen templates have complete executable contracts", async () => {
   assert.ok(validator);
   for (const name of expectedTemplates) {
     const result = await validator.validateTemplate(path.join(root, "templates", name, "template.md"));
     assert.deepEqual(result.errors, [], `${name}: ${result.errors.join("; ")}`);
     assert.ok(new Set(result.modules).size >= 3, `${name} must use at least 3 distinct modules`);
     assert.equal(result.frontmatter.name, name);
+  }
+});
+
+test("the eight enterprise templates have distinct contracts and calls to action", async () => {
+  assert.ok(validator);
+  const intents = new Set();
+  const audiences = new Set();
+  const moduleCompositions = new Set();
+  const callsToAction = new Set();
+
+  for (const name of enterpriseTemplates) {
+    const file = path.join(root, "templates", name, "template.md");
+    const source = await readFile(file, "utf8");
+    const result = await validator.validateTemplate(file);
+    intents.add(result.frontmatter.intent);
+    audiences.add(result.frontmatter.audience);
+    moduleCompositions.add([...new Set(result.modules)].join(","));
+    const cta = source.match(/:::cta(?:\[[^\]]*\])?\s*\n(?:[^\n]*\n)*?title:\s*([^\n]+)/);
+    assert.ok(cta, `${name} must include a cta module with a title`);
+    callsToAction.add(cta[1].trim());
+  }
+
+  assert.equal(intents.size, enterpriseTemplates.length, "enterprise template intents must be unique");
+  assert.equal(audiences.size, enterpriseTemplates.length, "enterprise template audiences must be unique");
+  assert.equal(moduleCompositions.size, enterpriseTemplates.length, "enterprise module compositions must be unique");
+  assert.equal(callsToAction.size, enterpriseTemplates.length, "enterprise calls to action must be unique");
+});
+
+test("rejects a customer case row that does not follow title, result, body semantics", async () => {
+  assert.ok(validator);
+  const content = validTemplate
+    .replace("name: sample", "name: customer-case-study")
+    .replace(
+      /:::quote[\s\S]*?:::/,
+      ":::cases[案例概览]\n[请填写实施对象] | [请填写行业] | [请填写经客户确认的结果描述]\n:::"
+    );
+  await withFixture(content, async file => {
+    const result = await validator.validateTemplate(file);
+    assert.match(result.errors.join("\n"), /customer-case-study cases row must use title, result, body semantics/);
+  }, { name: "customer-case-study" });
+});
+
+test("rejects a quarterly comparison without canonical plan and actual columns", async () => {
+  assert.ok(validator);
+  const content = validTemplate
+    .replace("name: sample", "name: quarterly-review")
+    .replace(
+      /:::quote[\s\S]*?:::/,
+      ":::compare[计划与实际]\n[请填写目标] | [请填写计划] | [请填写结果] | [请填写偏差]\n:::"
+    );
+  await withFixture(content, async file => {
+    const result = await validator.validateTemplate(file);
+    assert.match(result.errors.join("\n"), /quarterly-review compare opener must be :::compare\[计划 \| 实际\]/);
+  }, { name: "quarterly-review" });
+});
+
+test("scenario semantic checks ignore module examples inside Markdown fences", async () => {
+  assert.ok(validator);
+  const customerExample = validTemplate
+    .replace("name: sample", "name: customer-case-study") +
+    "\n```markdown\n:::cases[案例概览]\n[请填写客户或案例场景] | [请填写经客户确认的结果] | [请填写实施范围、方法与口径说明]\n:::\n```\n";
+  await withFixture(customerExample, async file => {
+    const result = await validator.validateTemplate(file);
+    assert.match(result.errors.join("\n"), /customer-case-study cases row must use title, result, body semantics/);
+  }, { name: "customer-case-study" });
+
+  const quarterlyExample = validTemplate
+    .replace("name: sample", "name: quarterly-review") +
+    "\n```markdown\n:::compare[计划 | 实际]\n[请填写目标] | [请填写计划] | [请填写结果] | [请填写偏差]\n:::\n```\n";
+  await withFixture(quarterlyExample, async file => {
+    const result = await validator.validateTemplate(file);
+    assert.match(result.errors.join("\n"), /quarterly-review compare opener must be :::compare\[计划 \| 实际\]/);
+  }, { name: "quarterly-review" });
+});
+
+test("README groups all templates by publishing scenario", async () => {
+  const readme = await readFile(path.join(root, "README.md"), "utf8");
+  const expectedGroups = ["企业沟通", "研究洞察", "产品增长", "个人创作"];
+  for (const group of expectedGroups) {
+    assert.match(readme, new RegExp(`^### ${group}$`, "m"), `README must include ${group}`);
   }
 });
 
