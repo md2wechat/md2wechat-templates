@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/md2wechat/md2wechat-templates/blob/main/template.schema.json",
+  "title": "md2wechat template frontmatter",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "name",
+    "title",
+    "description",
+    "intent",
+    "audience",
+    "theme",
+    "requires",
+    "verifiedWith"
+  ],
+  "properties": {
+    "name": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+    },
+    "title": { "type": "string", "minLength": 2 },
+    "description": { "type": "string", "minLength": 6 },
+    "intent": { "type": "string", "minLength": 6 },
+    "audience": { "type": "string", "minLength": 2 },
+    "theme": {
+      "type": "string",
+      "enum": ["bold-red", "elegant-gold", "focus-green", "minimal-blue"]
+    },
+    "requires": { "type": "string", "const": "api" },
+    "verifiedWith": { "type": "string", "const": "v3.4.0" }
+  }
+}
