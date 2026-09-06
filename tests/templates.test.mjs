@@ -94,6 +94,15 @@ test("rejects missing required frontmatter fields", async () => {
   });
 });
 
+test("enforces the schema length constraints", async () => {
+  assert.ok(validator);
+  const content = validTemplate.replace("intent: 帮助读者理解一个可执行结论", "intent: 短");
+  await withFixture(content, async file => {
+    const result = await validator.validateTemplate(file);
+    assert.match(result.errors.join("\n"), /intent must contain at least 6 characters/);
+  });
+});
+
 test("rejects a directory and name mismatch", async () => {
   assert.ok(validator);
   await withFixture(validTemplate, async file => {

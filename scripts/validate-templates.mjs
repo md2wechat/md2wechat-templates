@@ -8,7 +8,6 @@ const repositoryRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url))
 const schema = JSON.parse(await readFile(path.join(repositoryRoot, "template.schema.json"), "utf8"));
 const requiredKeys = new Set(schema.required);
 const allowedKeys = new Set(Object.keys(schema.properties));
-const allowedThemes = new Set(schema.properties.theme.enum);
 
 const recommendedModules = new Set([
   "author-card", "people", "series", "subscribe",
@@ -151,13 +150,17 @@ function validateFrontmatter(frontmatter, directoryName) {
     if (!Object.hasOwn(frontmatter, key)) errors.push(`missing frontmatter key: ${key}`);
   }
   for (const [key, value] of Object.entries(frontmatter)) {
-    if (allowedKeys.has(key) && !value.trim()) errors.push(`frontmatter value must not be empty: ${key}`);
+    if (!allowedKeys.has(key)) continue;
+    const rule = schema.properties[key];
+    if (rule.type === "string" && typeof value !== "string") errors.push(`${key} must be a string`);
+    if (typeof value !== "string") continue;
+    if (!value.trim()) errors.push(`frontmatter value must not be empty: ${key}`);
+    if (rule.minLength && [...value].length < rule.minLength) errors.push(`${key} must contain at least ${rule.minLength} characters`);
+    if (rule.pattern && !(new RegExp(rule.pattern)).test(value)) errors.push(`${key} does not match ${rule.pattern}`);
+    if (rule.enum && !rule.enum.includes(value)) errors.push(`${key} is not in the verified v3.4.0 set: ${value}`);
+    if (Object.hasOwn(rule, "const") && value !== rule.const) errors.push(`${key} must equal ${rule.const}`);
   }
   if (frontmatter.name && frontmatter.name !== directoryName) errors.push(`frontmatter name ${frontmatter.name} must match directory ${directoryName}`);
-  if (frontmatter.name && !/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(frontmatter.name)) errors.push("frontmatter name must be kebab-case");
-  if (frontmatter.theme && !allowedThemes.has(frontmatter.theme)) errors.push(`theme is not in the verified v3.4.0 set: ${frontmatter.theme}`);
-  if (frontmatter.requires && frontmatter.requires !== "api") errors.push("requires must equal api");
-  if (frontmatter.verifiedWith && frontmatter.verifiedWith !== "v3.4.0") errors.push("verifiedWith must equal v3.4.0");
   return errors;
 }
 
