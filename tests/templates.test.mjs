@@ -103,6 +103,18 @@ test("enforces the schema length constraints", async () => {
   });
 });
 
+test("parses frontmatter as YAML and validates scalar types", async () => {
+  assert.ok(validator);
+  await withFixture(validTemplate.replace("title: 示例模板", "title: Foo: bar"), async file => {
+    const result = await validator.validateTemplate(file);
+    assert.match(result.errors.join("\n"), /invalid YAML frontmatter/);
+  });
+  await withFixture(validTemplate.replace("title: 示例模板", "title: null"), async file => {
+    const result = await validator.validateTemplate(file);
+    assert.match(result.errors.join("\n"), /title must be a string/);
+  });
+});
+
 test("rejects a directory and name mismatch", async () => {
   assert.ok(validator);
   await withFixture(validTemplate, async file => {
@@ -129,10 +141,14 @@ test("rejects unknown modules", async () => {
 
 test("rejects duplicate and unknown frontmatter keys", async () => {
   assert.ok(validator);
-  const content = validTemplate.replace("title: 示例模板", "title: 示例模板\ntitle: 重复标题\nowner: nobody");
-  await withFixture(content, async file => {
+  const duplicate = validTemplate.replace("title: 示例模板", "title: 示例模板\ntitle: 重复标题");
+  await withFixture(duplicate, async file => {
     const result = await validator.validateTemplate(file);
     assert.match(result.errors.join("\n"), /duplicate frontmatter key: title/);
+  });
+  const unknown = validTemplate.replace("title: 示例模板", "title: 示例模板\nowner: nobody");
+  await withFixture(unknown, async file => {
+    const result = await validator.validateTemplate(file);
     assert.match(result.errors.join("\n"), /unknown frontmatter key: owner/);
   });
 });
@@ -155,6 +171,16 @@ test("ignores module-looking text in comments and code fences", async () => {
     "## 正文",
     "<!-- :::unknown-comment -->\n\n```markdown\n:::unknown-example\n::: \n```\n\n## 正文",
   );
+  await withFixture(content, async file => {
+    const result = await validator.validateTemplate(file);
+    assert.deepEqual(result.errors, []);
+    assert.deepEqual(result.modules.sort(), ["hero", "quote", "summary"]);
+  });
+});
+
+test("a shorter nested fence does not close a longer Markdown fence", async () => {
+  assert.ok(validator);
+  const content = `${validTemplate}\n\`\`\`\`markdown\n\`\`\`markdown\n:::unknown-example\n:::\n\`\`\`\n\`\`\`\`\n`;
   await withFixture(content, async file => {
     const result = await validator.validateTemplate(file);
     assert.deepEqual(result.errors, []);

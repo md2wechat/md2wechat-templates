@@ -3,6 +3,7 @@
 import { readdir, readFile } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { parseDocument } from "yaml";
 
 const repositoryRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const schema = JSON.parse(await readFile(path.join(repositoryRoot, "template.schema.json"), "utf8"));
@@ -49,13 +50,6 @@ const exactLock = {
   },
 };
 
-function withoutQuotes(value) {
-  if ((value.startsWith('"') && value.endsWith('"')) || (value.startsWith("'") && value.endsWith("'"))) {
-    return value.slice(1, -1);
-  }
-  return value;
-}
-
 function parseFrontmatter(source) {
   const errors = [];
   const lines = source.replaceAll("\r\n", "\n").split("\n");
@@ -63,19 +57,25 @@ function parseFrontmatter(source) {
   const end = lines.indexOf("---", 1);
   if (end === -1) return { frontmatter: {}, body: "", errors: ["missing closing frontmatter fence"] };
 
-  const frontmatter = {};
-  for (let index = 1; index < end; index += 1) {
-    const line = lines[index];
-    if (!line.trim()) continue;
-    const match = line.match(/^([A-Za-z][A-Za-z0-9]*):\s*(.*)$/);
-    if (!match) {
-      errors.push(`invalid frontmatter line ${index + 1}`);
-      continue;
-    }
-    const [, key, rawValue] = match;
-    if (Object.hasOwn(frontmatter, key)) errors.push(`duplicate frontmatter key: ${key}`);
+  const yamlSource = lines.slice(1, end).join("\n");
+  const seenKeys = new Set();
+  for (const line of lines.slice(1, end)) {
+    const match = line.match(/^([A-Za-z][A-Za-z0-9]*):/);
+    if (!match) continue;
+    if (seenKeys.has(match[1])) errors.push(`duplicate frontmatter key: ${match[1]}`);
+    seenKeys.add(match[1]);
+  }
+
+  const document = parseDocument(yamlSource, { prettyErrors: false, uniqueKeys: true });
+  for (const error of document.errors) errors.push(`invalid YAML frontmatter: ${error.message.split("\n")[0]}`);
+  let frontmatter = {};
+  if (document.errors.length === 0) {
+    const parsed = document.toJS({ maxAliasCount: 0 });
+    if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) errors.push("frontmatter must be a YAML mapping");
+    else frontmatter = parsed;
+  }
+  for (const key of Object.keys(frontmatter)) {
     if (!allowedKeys.has(key)) errors.push(`unknown frontmatter key: ${key}`);
-    if (!Object.hasOwn(frontmatter, key)) frontmatter[key] = withoutQuotes(rawValue.trim());
   }
   return { frontmatter, body: lines.slice(end + 1).join("\n"), errors };
 }
@@ -90,11 +90,12 @@ function inspectMarkdown(body) {
 
   for (let index = 0; index < lines.length; index += 1) {
     const line = lines[index];
-    const fence = line.match(/^\s*(`{3,}|~{3,})/);
+    const fence = line.match(/^\s*(`{3,}|~{3,})(.*)$/);
     if (fence) {
       const token = fence[1];
-      if (!codeFence) codeFence = token[0];
-      else if (codeFence === token[0]) codeFence = null;
+      const marker = token[0];
+      if (!codeFence) codeFence = { marker, length: token.length };
+      else if (codeFence.marker === marker && token.length >= codeFence.length && fence[2].trim() === "") codeFence = null;
       continue;
     }
     if (codeFence) continue;
