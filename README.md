@@ -1,78 +1,60 @@
 <div align="center">
 
-# md2wechat Templates
+# 公众号文章结构模板
 
-**可发布稿骨架**
-
-10 组开箱即用框架，帮助 Agent 把草稿推进成可发布稿
+用清楚的内容骨架，把材料整理成适合公众号阅读的文章。
 
 </div>
 
----
+Agent 根据你提供的事实、观点和引用来写作；这里的模板负责安排开篇、证据、正文与结尾；md2wechat 负责高级排版、预览和后续草稿流程。模板本身不会替你核实材料，也不会直接发布文章。
 
-## 这套模板库是干什么的？
+当前 10 个模板都使用 API 高级排版模块。使用前需要安装 md2wechat CLI，并开通 [Convert API](https://www.md2wechat.cn/api-docs)。Convert API 负责把 Markdown 转为 HTML，不会创建公众号草稿；需要创建草稿时，请另外配置 [Publishing API](https://md2wechat.com/api/v1)。创建草稿不等于群发。
 
-这套模板服务于 `md2wechat` 和 Agent 的可发布稿流程，负责：
+## 选择模板
 
-- 一篇文章应该怎么起势
-- 证据和观点怎么排布
-- 哪里该补案例、FAQ、CTA、总结
-- 怎样把文章收口成一版可发布稿
-
-## 使用方法
-
-1. 选一个最接近你目标的可发布稿骨架
-2. 把你的草稿、选题或片段内容塞进去
-3. 让 `md2wechat` 补齐结构、转场、模块和语气
-4. 生成一版可审、可改、可发的稿子
-
-## 这些模板解决什么问题
-
-| 模板 | 适用场景 | 它真正补的东西 |
+| 模板 | 适合写 | 结构重点 |
 |---|---|---|
-| [tech-tutorial](templates/tech-tutorial/template.md) | 工具教程、How-to | 步骤结构、解释顺序、行动闭环 |
-| [opinion-piece](templates/opinion-piece/template.md) | 观点文章、深度表达 | 立场、论证、节奏、结尾收束 |
-| [weekly-digest](templates/weekly-digest/template.md) | 周报、信息汇总 | 筛选、排序、提炼和转场 |
-| [product-launch](templates/product-launch/template.md) | 产品发布、版本更新 | 卖点展开、差异点和 CTA |
-| [data-report](templates/data-report/template.md) | 数据报告、调研 | 图表说明、结论提炼、可信度组织 |
-| [knowledge-science](templates/knowledge-science/template.md) | 概念解释、科普 | 定义、拆解、示例和 FAQ |
-| [thread-summary](templates/thread-summary/template.md) | 推文整理、内容归档 | 主题收束和长文重构 |
-| [interview](templates/interview/template.md) | 访谈、Q&A | 人物表达节奏和问题组织 |
-| [listicle](templates/listicle/template.md) | 清单型文章 | 信息密度、可读性和记忆点 |
-| [newsletter](templates/newsletter/template.md) | 品牌周刊、固定栏目 | 固定结构、稳定节奏和品牌感 |
+| [tech-tutorial](templates/tech-tutorial/template.md) | 工具教程、操作指南 | 前提、步骤、验证与排错 |
+| [opinion-piece](templates/opinion-piece/template.md) | 行业观点、深度评论 | 立场、证据、异议与建议 |
+| [weekly-digest](templates/weekly-digest/template.md) | 行业周报、内容策展 | 筛选依据、来源与编辑总结 |
+| [product-launch](templates/product-launch/template.md) | 产品发布、版本更新 | 变化、适用对象、升级步骤 |
+| [data-report](templates/data-report/template.md) | 调研报告、数据解读 | 口径、指标、发现与局限 |
+| [knowledge-science](templates/knowledge-science/template.md) | 概念解释、入门科普 | 定义、原理、例子与误区 |
+| [thread-summary](templates/thread-summary/template.md) | 公开帖子整理、长文重构 | 来源、原意、脉络与补充 |
+| [interview](templates/interview/template.md) | 人物访谈、问答整理 | 人物背景、原话与主题线索 |
+| [listicle](templates/listicle/template.md) | 方法、工具或建议清单 | 入选标准、逐项证据与选择建议 |
+| [newsletter](templates/newsletter/template.md) | 品牌周刊、固定栏目 | 编辑视角、推荐理由与读者互动 |
 
-## 它补什么
+## 模板与主题有什么区别
 
-### 免费模板给你样式
+- 模板决定文章讲什么、按什么顺序讲，例如先给结论，再放证据，最后给出下一步。
+- 主题决定文章的视觉风格，例如 `minimal-blue` 或 `elegant-gold`。
 
-- 看起来更整齐
-- 更容易复制到公众号后台
+换主题不会替代内容结构；换模板也不会自动改变事实和观点。
 
-### md2wechat 模板给你可发布稿框架
+## 使用步骤
 
-- 知道一篇文章该怎么展开
-- 知道哪些模块能提升转化
-- 知道哪里该补 FAQ、对比、证据和行动召唤
-- 更适合让 Agent 稳定产出可发布稿
+1. 在上表选择最接近写作任务的模板，复制对应的 `template.md`。
+2. 把方括号中的提示替换成你的材料；引用、数据和结论要保留来源。
+3. 按 [md2wechat Guide](https://github.com/md2wechat/md2wechat-guide) 安装并配置 CLI。
+4. 先检查结构，再转换预览：
 
-## 结构模块速查
+   ```bash
+   md2wechat layout validate --file article.md --json
+   md2wechat convert article.md --output article.html
+   ```
 
-```markdown
-:::hero              开篇建立主张
-:::verdict           先给结论
-:::stat-row          用数字建立信服力
-:::comparison-table  做清晰对比
-:::step-list         把过程走通
-:::checklist         补执行闭环
-:::faq               处理犹豫和追问
-:::cta               收口到转化动作
-```
+5. 人工复核标题、事实、链接、图片版权和行动说明。需要创建草稿时，再进入 Publishing API 流程。
 
-完整模块文档：[LAYOUT.md](https://github.com/geekjourneyx/md2wechat-skill/blob/main/docs/LAYOUT.md)
+模块名称和字段以 [v3.4.0 Layout 文档](https://github.com/geekjourneyx/md2wechat-skill/blob/v3.4.0/docs/LAYOUT.md) 及本机 `layout show <name> --json` 为准。
+
+## 参与贡献
+
+新增或修改模板前请阅读 [CONTRIBUTING.md](CONTRIBUTING.md)。仓库会检查模板字段、模块语法、占位符、敏感信息和 README 清单是否同步。
 
 ## 相关资源
 
-- [md2wechat-skill](https://github.com/geekjourneyx/md2wechat-skill) — 主引擎
-- [md2wechat-guide](https://github.com/md2wechat/md2wechat-guide) — 草稿到可发布稿的教程
-- [awesome-wechat-markdown](https://github.com/md2wechat/awesome-wechat-markdown) — 生态工具地图
-- [md2wechat org](https://github.com/md2wechat) — 品牌入口
+- [md2wechat CLI 与 Agent Skill](https://github.com/geekjourneyx/md2wechat-skill)
+- [md2wechat Guide](https://github.com/md2wechat/md2wechat-guide)
+- [awesome-wechat-markdown](https://github.com/md2wechat/awesome-wechat-markdown)
+- [md2wechat 生态入口](https://github.com/md2wechat)
