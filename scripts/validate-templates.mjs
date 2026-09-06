@@ -258,6 +258,6 @@ if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.me
     for (const error of errors) console.error(`ERROR: ${error}`);
     process.exitCode = 1;
   } else {
-    console.log("Validated 10 templates against the v3.4.0 contract.");
+    console.log("Validated 18 templates against the v3.4.0 contract.");
   }
 }

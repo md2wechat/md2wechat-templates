@@ -13,16 +13,35 @@ try {
 
 const root = path.resolve(import.meta.dirname, "..");
 const expectedTemplates = [
+  "company-announcement",
+  "customer-case-study",
   "data-report",
+  "employer-brand",
+  "event-recap",
+  "executive-opinion",
   "interview",
   "knowledge-science",
   "listicle",
+  "meeting-to-public-brief",
   "newsletter",
   "opinion-piece",
   "product-launch",
+  "quarterly-review",
   "tech-tutorial",
   "thread-summary",
+  "whitepaper-summary",
   "weekly-digest",
+];
+
+const enterpriseTemplates = [
+  "customer-case-study",
+  "company-announcement",
+  "executive-opinion",
+  "meeting-to-public-brief",
+  "event-recap",
+  "quarterly-review",
+  "whitepaper-summary",
+  "employer-brand",
 ];
 
 const validTemplate = `---
@@ -75,13 +94,46 @@ test("validator module is available", () => {
   assert.ok(validator, "scripts/validate-templates.mjs must exist");
 });
 
-test("all ten current templates have complete executable contracts", async () => {
+test("all eighteen templates have complete executable contracts", async () => {
   assert.ok(validator);
   for (const name of expectedTemplates) {
     const result = await validator.validateTemplate(path.join(root, "templates", name, "template.md"));
     assert.deepEqual(result.errors, [], `${name}: ${result.errors.join("; ")}`);
     assert.ok(new Set(result.modules).size >= 3, `${name} must use at least 3 distinct modules`);
     assert.equal(result.frontmatter.name, name);
+  }
+});
+
+test("the eight enterprise templates have distinct contracts and calls to action", async () => {
+  assert.ok(validator);
+  const intents = new Set();
+  const audiences = new Set();
+  const moduleCompositions = new Set();
+  const callsToAction = new Set();
+
+  for (const name of enterpriseTemplates) {
+    const file = path.join(root, "templates", name, "template.md");
+    const source = await readFile(file, "utf8");
+    const result = await validator.validateTemplate(file);
+    intents.add(result.frontmatter.intent);
+    audiences.add(result.frontmatter.audience);
+    moduleCompositions.add([...new Set(result.modules)].join(","));
+    const cta = source.match(/:::cta(?:\[[^\]]*\])?\s*\n(?:[^\n]*\n)*?title:\s*([^\n]+)/);
+    assert.ok(cta, `${name} must include a cta module with a title`);
+    callsToAction.add(cta[1].trim());
+  }
+
+  assert.equal(intents.size, enterpriseTemplates.length, "enterprise template intents must be unique");
+  assert.equal(audiences.size, enterpriseTemplates.length, "enterprise template audiences must be unique");
+  assert.equal(moduleCompositions.size, enterpriseTemplates.length, "enterprise module compositions must be unique");
+  assert.equal(callsToAction.size, enterpriseTemplates.length, "enterprise calls to action must be unique");
+});
+
+test("README groups all templates by publishing scenario", async () => {
+  const readme = await readFile(path.join(root, "README.md"), "utf8");
+  const expectedGroups = ["企业沟通", "研究洞察", "产品增长", "个人创作"];
+  for (const group of expectedGroups) {
+    assert.match(readme, new RegExp(`^### ${group}$`, "m"), `README must include ${group}`);
   }
 });
 
