@@ -6,7 +6,7 @@ intent: 帮助读者快速掌握本周重要变化及其影响
 audience: 行业从业者、企业管理者和专业社群成员
 theme: minimal-blue
 requires: api
-verifiedWith: v3.4.0
+verifiedWith: v3.5.0
 ---
 
 :::hero

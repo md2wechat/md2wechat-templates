@@ -6,7 +6,7 @@ intent: 帮助读者理解关键变化、证据边界和可采取的行动
 audience: 行业研究、运营分析和企业内容团队
 theme: focus-green
 requires: api
-verifiedWith: v3.4.0
+verifiedWith: v3.5.0
 ---
 
 :::hero

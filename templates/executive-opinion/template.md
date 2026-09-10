@@ -6,7 +6,7 @@ intent: 建立可被检验的管理观点并说明企业采取行动的依据
 audience: 关注企业战略与行业发展的客户、伙伴和专业读者
 theme: elegant-gold
 requires: api
-verifiedWith: v3.4.0
+verifiedWith: v3.5.0
 ---
 
 :::hero

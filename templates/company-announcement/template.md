@@ -6,7 +6,7 @@ intent: 让相关读者准确理解公告内容并找到对应办理入口
 audience: 客户、合作伙伴、员工家属及其他外部利益相关方
 theme: minimal-blue
 requires: api
-verifiedWith: v3.4.0
+verifiedWith: v3.5.0
 ---
 
 :::label-title

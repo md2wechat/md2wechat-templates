@@ -6,7 +6,7 @@ intent: 让读者看懂作者的判断、依据和适用边界
 audience: 行业从业者、企业管理者和专业内容作者
 theme: elegant-gold
 requires: api
-verifiedWith: v3.4.0
+verifiedWith: v3.5.0
 ---
 
 :::hero

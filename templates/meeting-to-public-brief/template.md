@@ -6,7 +6,7 @@ intent: 让未参会读者了解已确认事项、公开依据和后续节点
 audience: 需要同步会议公开信息的合作方、客户与项目关注者
 theme: minimal-blue
 requires: api
-verifiedWith: v3.4.0
+verifiedWith: v3.5.0
 ---
 
 :::cards[简报结构]

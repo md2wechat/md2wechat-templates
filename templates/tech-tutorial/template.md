@@ -6,7 +6,7 @@ intent: 帮助读者在明确前提下完成一个可验证的技术任务
 audience: 开发者、技术运营和使用自动化工具的内容团队
 theme: focus-green
 requires: api
-verifiedWith: v3.4.0
+verifiedWith: v3.5.0
 ---
 
 :::hero

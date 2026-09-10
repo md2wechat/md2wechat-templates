@@ -52,7 +52,7 @@ intent: 帮助读者理解一个可执行结论
 audience: 需要结构化写作的公众号作者
 theme: minimal-blue
 requires: api
-verifiedWith: v3.4.0
+verifiedWith: v3.5.0
 ---
 
 :::hero
