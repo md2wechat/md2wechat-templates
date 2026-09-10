@@ -6,7 +6,7 @@ intent: 帮助读者理解原帖的论证脉络、证据和后续讨论
 audience: 内容编辑、研究人员和需要归档公开讨论的创作者
 theme: minimal-blue
 requires: api
-verifiedWith: v3.4.0
+verifiedWith: v3.5.0
 ---
 
 :::hero

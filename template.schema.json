@@ -28,6 +28,6 @@
       "enum": ["bold-red", "elegant-gold", "focus-green", "minimal-blue"]
     },
     "requires": { "type": "string", "const": "api" },
-    "verifiedWith": { "type": "string", "const": "v3.4.0" }
+    "verifiedWith": { "type": "string", "const": "v3.5.0" }
   }
 }

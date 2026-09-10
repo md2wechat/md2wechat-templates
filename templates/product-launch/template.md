@@ -6,7 +6,7 @@ intent: 帮助现有与潜在用户判断是否升级以及如何开始
 audience: 产品用户、客户成功团队和企业技术决策者
 theme: bold-red
 requires: api
-verifiedWith: v3.4.0
+verifiedWith: v3.5.0
 ---
 
 :::hero

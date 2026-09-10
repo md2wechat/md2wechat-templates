@@ -6,7 +6,7 @@ intent: 帮助入门读者准确理解概念并知道如何继续学习
 audience: 面向非专业读者写作的研究者、教师和内容作者
 theme: elegant-gold
 requires: api
-verifiedWith: v3.4.0
+verifiedWith: v3.5.0
 ---
 
 :::hero

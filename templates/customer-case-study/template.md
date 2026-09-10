@@ -6,7 +6,7 @@ intent: 帮助潜在客户判断案例经验是否适用于自己的团队
 audience: 评估同类方案的业务负责人和采购决策者
 theme: focus-green
 requires: api
-verifiedWith: v3.4.0
+verifiedWith: v3.5.0
 ---
 
 :::hero

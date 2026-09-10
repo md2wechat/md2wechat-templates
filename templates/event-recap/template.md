@@ -6,7 +6,7 @@ intent: 帮助未到场读者理解活动价值并获取后续公开资源
 audience: 活动参与者、社区成员和关注议题的潜在参与者
 theme: bold-red
 requires: api
-verifiedWith: v3.4.0
+verifiedWith: v3.5.0
 ---
 
 :::hero

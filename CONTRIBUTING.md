@@ -17,7 +17,7 @@
    audience: 说明文章面向的主要读者
    theme: minimal-blue
    requires: api
-   verifiedWith: v3.4.0
+   verifiedWith: v3.5.0
    ---
    ```
 
@@ -45,7 +45,7 @@ md2wechat layout validate --file templates/<name>/template.md --json
 git diff --check
 ```
 
-前三项都通过后再提交 PR。`layout validate` 证明本地 v3.4.0 语法可被接受；最终排版效果仍需通过 Convert API 预览并人工检查。
+前三项都通过后再提交 PR。`layout validate` 证明本地 v3.5.0 语法可被接受；最终排版效果仍需通过 Convert API 预览并人工检查。
 
 ## 敏感信息
 

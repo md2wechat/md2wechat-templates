@@ -6,7 +6,7 @@ intent: 让读者理解受访者的经历、判断及其依据
 audience: 企业品牌、媒体编辑和独立创作者
 theme: elegant-gold
 requires: api
-verifiedWith: v3.4.0
+verifiedWith: v3.5.0
 ---
 
 :::hero

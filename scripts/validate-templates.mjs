@@ -27,13 +27,13 @@ const endingModules = new Set(["checklist", "closing", "cta", "epilogue", "summa
 
 const exactLock = {
   schemaVersion: 1,
-  reviewedAt: "2026-09-06",
+  reviewedAt: "2026-09-10",
   sources: {
     runtime: {
       repository: "geekjourneyx/md2wechat-skill",
       path: "VERSION",
-      sha: "18091983f59ddde8105e566545a0d9e4a12a4f1c",
-      schemaVersion: "v3.4.0",
+      sha: "1545d966571dc86b54c98f888a0e6451501f8c81",
+      schemaVersion: "v3.5.0",
     },
     products: {
       repository: "md2wechat/.github",
@@ -181,7 +181,7 @@ function validateFrontmatter(frontmatter, directoryName) {
     if (!value.trim()) errors.push(`frontmatter value must not be empty: ${key}`);
     if (rule.minLength && [...value].length < rule.minLength) errors.push(`${key} must contain at least ${rule.minLength} characters`);
     if (rule.pattern && !(new RegExp(rule.pattern)).test(value)) errors.push(`${key} does not match ${rule.pattern}`);
-    if (rule.enum && !rule.enum.includes(value)) errors.push(`${key} is not in the verified v3.4.0 set: ${value}`);
+    if (rule.enum && !rule.enum.includes(value)) errors.push(`${key} is not in the verified v3.5.0 set: ${value}`);
     if (Object.hasOwn(rule, "const") && value !== rule.const) errors.push(`${key} must equal ${rule.const}`);
   }
   if (frontmatter.name && frontmatter.name !== directoryName) errors.push(`frontmatter name ${frontmatter.name} must match directory ${directoryName}`);
@@ -282,6 +282,6 @@ if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.me
     for (const error of errors) console.error(`ERROR: ${error}`);
     process.exitCode = 1;
   } else {
-    console.log("Validated 18 templates against the v3.4.0 contract.");
+    console.log("Validated 18 templates against the v3.5.0 contract.");
   }
 }

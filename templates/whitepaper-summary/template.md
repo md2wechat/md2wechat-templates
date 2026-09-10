@@ -6,7 +6,7 @@ intent: 帮助专业读者快速判断白皮书是否值得阅读全文
 audience: 需要评估研究材料的行业分析师、企业研究员和编辑
 theme: elegant-gold
 requires: api
-verifiedWith: v3.4.0
+verifiedWith: v3.5.0
 ---
 
 :::label-title

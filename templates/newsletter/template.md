@@ -6,7 +6,7 @@ intent: 帮助固定读者快速了解本期主题并找到值得继续阅读的
 audience: 品牌内容团队、独立作者和社群运营者
 theme: minimal-blue
 requires: api
-verifiedWith: v3.4.0
+verifiedWith: v3.5.0
 ---
 
 :::hero

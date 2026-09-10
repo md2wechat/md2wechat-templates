@@ -6,7 +6,7 @@ intent: 让团队与外部关注者看清本季度进展及调整依据
 audience: 需要审阅阶段成果的管理团队、合作伙伴和项目成员
 theme: focus-green
 requires: api
-verifiedWith: v3.4.0
+verifiedWith: v3.5.0
 ---
 
 :::hero

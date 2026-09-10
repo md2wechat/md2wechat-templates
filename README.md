@@ -71,7 +71,7 @@ Agent 根据你提供的事实、观点和引用来写作；这里的模板负�
 
 5. 人工复核标题、事实、链接、图片版权和行动说明。需要创建草稿时，再进入 Publishing API 流程。
 
-模块名称和字段以 [v3.4.0 Layout 文档](https://github.com/geekjourneyx/md2wechat-skill/blob/v3.4.0/docs/LAYOUT.md) 及本机 `layout show <name> --json` 为准。
+模块名称和字段以 [v3.5.0 Layout 文档](https://github.com/geekjourneyx/md2wechat-skill/blob/v3.5.0/docs/LAYOUT.md) 及本机 `layout show <name> --json` 为准。
 
 ## 参与贡献
 

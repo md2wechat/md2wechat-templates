@@ -6,7 +6,7 @@ intent: 让读者看懂每个选项的依据、差异和适用条件
 audience: 需要整理资源、方法或采购候选项的公众号作者
 theme: focus-green
 requires: api
-verifiedWith: v3.4.0
+verifiedWith: v3.5.0
 ---
 
 :::hero

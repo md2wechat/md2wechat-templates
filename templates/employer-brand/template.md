@@ -6,7 +6,7 @@ intent: 帮助候选人判断团队文化、岗位要求和自身期待是否匹
 audience: 正在了解公司工作方式与公开岗位的潜在候选人
 theme: bold-red
 requires: api
-verifiedWith: v3.4.0
+verifiedWith: v3.5.0
 ---
 
 :::hero
