@@ -71,7 +71,15 @@ Agent 根据你提供的事实、观点和引用来写作；这里的模板负�
 
 5. 人工复核标题、事实、链接、图片版权和行动说明。需要创建草稿时，再进入 Publishing API 流程。
 
-模块名称和字段以 [v3.5.0 Layout 文档](https://github.com/geekjourneyx/md2wechat-skill/blob/v3.5.0/docs/LAYOUT.md) 及本机 `layout show <name> --json` 为准。
+模块名称和字段以 [v3.6.0 Layout 文档](https://github.com/geekjourneyx/md2wechat-skill/blob/9cb3318f84ff980d1cac41ab0fafbcec525ef6dd/docs/LAYOUT.md) 及本机 `layout show <name> --json` 为准。
+
+## 当前版本与模板验证记录
+
+当前运行时为 [v3.6.0](https://github.com/geekjourneyx/md2wechat-skill/releases/tag/v3.6.0)，发布于 2026-09-12。本仓 18 个模板的 `verifiedWith: v3.5.0` 保留此前语法实测版本，不表示当前运行时停留在旧版。本次校准核对版本文档和仓库检查，未重新执行 CLI 或远程排版验证。
+
+v3.6.0 新增知乎、CSDN、头条未发布草稿流程。现有模板包含公众号高级排版模块，不能直接传入 `sync prepare`：应另存普通 Markdown，移除 `:::` 模块和未解析 Obsidian 语法，将远程图片改为有效本地图片。
+
+CLI 本地准备后，由浏览器 Agent 在已登录账号中上传图片、保存草稿并重新打开核对全文。准备成功不等于草稿完成，不包含公开发布，也不证明四大办公 Agent 已通过宿主验证。具体步骤见[多平台指南](https://github.com/md2wechat/md2wechat-guide/blob/main/11-multi-platform.md)和[版本化流程](https://github.com/geekjourneyx/md2wechat-skill/blob/9cb3318f84ff980d1cac41ab0fafbcec525ef6dd/docs/SYNC.md)。
 
 ## 参与贡献
 
