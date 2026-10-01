@@ -13,10 +13,10 @@ const allowedKeys = new Set(Object.keys(schema.properties));
 const recommendedModules = new Set([
   "author-card", "people", "series", "subscribe",
   "cases", "checklist", "closing", "cta", "faq", "logos", "notice", "pricing", "specs", "summary", "toolbox",
-  "figure-caption", "gallery-grid", "gallery-story", "image-annotate", "image-compare", "image-phone-shot", "image-steps", "image-text", "quote",
+  "figure-caption", "gallery", "gallery-grid", "gallery-story", "image-annotate", "image-compare", "image-phone-shot", "image-steps", "image-text", "quote",
   "dialogue-pair", "flow", "matrix", "split",
   "compare", "infographic", "metrics", "steps", "timeline",
-  "svg-reveal", "svg-swipe-gallery",
+  "cover-reveal", "expand", "svg-reveal", "svg-swipe-gallery",
   "audience-fit", "bridge", "manifesto", "myth-fact", "verdict",
   "cards", "epilogue", "hero", "label-title", "part", "section-title", "toc",
   "callout", "changelog", "comparison-table", "definition", "question", "quote-card", "resource-list", "stat-row", "tweet",
@@ -27,13 +27,13 @@ const endingModules = new Set(["checklist", "closing", "cta", "epilogue", "summa
 
 const exactLock = {
   schemaVersion: 1,
-  reviewedAt: "2026-09-14",
+  reviewedAt: "2026-10-01",
   sources: {
     runtime: {
       repository: "geekjourneyx/md2wechat-skill",
       path: "VERSION",
-      sha: "40c341bdcdbe83bbbda981fa85368c0e1a63d0c7",
-      schemaVersion: "v3.6.0",
+      sha: "19811903a7f7584d7aa752ea29bbf9d74cf78b47",
+      schemaVersion: "v3.8.0",
     },
     products: {
       repository: "md2wechat/.github",
