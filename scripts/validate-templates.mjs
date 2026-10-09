@@ -27,7 +27,7 @@ const endingModules = new Set(["checklist", "closing", "cta", "epilogue", "summa
 
 const exactLock = {
   schemaVersion: 1,
-  reviewedAt: "2026-10-01",
+  reviewedAt: "2026-10-09",
   sources: {
     runtime: {
       repository: "geekjourneyx/md2wechat-skill",
@@ -44,7 +44,7 @@ const exactLock = {
     platforms: {
       repository: "md2wechat/md2wechat-wiki",
       path: "evidence/agent-platforms.json",
-      sha: "474ef8b8398e9b21b79ed937e24cb3c13ce1505d",
+      sha: "0acae95ed7d5e209232d15cb6947cfee88c22c57",
       schemaVersion: 1,
     },
   },
