@@ -184,6 +184,28 @@ test("README groups all templates by publishing scenario", async () => {
   }
 });
 
+test("README distinguishes current v3.8 runtime facts from historical template verification", async () => {
+  const readme = await readFile(path.join(root, "README.md"), "utf8");
+  assert.match(readme, /v3\.8\.0/);
+  assert.match(readme, /48 个 API 主题、83 个推荐场景、59 个推荐语法名和 65 项渲染能力/);
+  assert.match(readme, /`verifiedWith: v3\.5\.0`/);
+  assert.match(readme, /微信[^。\n]*交互[^。\n]*尚未验证/);
+});
+
+test("accepts the v3.8 recommended layout modules", async () => {
+  assert.ok(validator);
+  for (const moduleName of ["cover-reveal", "expand", "gallery"]) {
+    const content = validTemplate.replace(":::quote", `:::${moduleName}`);
+    await withFixture(content, async file => {
+      const result = await validator.validateTemplate(file);
+      assert.doesNotMatch(
+        result.errors.join("\n"),
+        new RegExp(`unknown or non-recommended module: ${moduleName}`),
+      );
+    });
+  }
+});
+
 test("rejects missing required frontmatter fields", async () => {
   assert.ok(validator);
   const content = validTemplate.replace("intent: 帮助读者理解一个可执行结论\n", "");
